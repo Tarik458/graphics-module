@@ -18,5 +18,19 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WindowHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="vertShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WindowHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
