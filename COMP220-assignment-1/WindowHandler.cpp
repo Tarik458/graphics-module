@@ -19,23 +19,24 @@ void WindowHandler::setup()
 		//Display an error message box
 		//https://wiki.libsdl.org/SDL_ShowSimpleMessageBox
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_Init failed", SDL_GetError(), NULL);
-
-		//Create a window, note we have to free the pointer returned using the DestroyWindow Function
-		//https://wiki.libsdl.org/SDL_CreateWindow
-		window = SDL_CreateWindow("SDL2 Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_OPENGL);
-		//Checks to see if the window has been created, the pointer will have a value of some kind
-		if (window == nullptr)
-		{
-			//Show error
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_CreateWindow failed", SDL_GetError(), NULL);
-			//Close the SDL Library
-			//https://wiki.libsdl.org/SDL_Quit
-			SDL_Quit();
-		}
 	}
-	SDL_Window* Wintmp = window;
+		
+	//Create a window, note we have to free the pointer returned using the DestroyWindow Function
+	//https://wiki.libsdl.org/SDL_CreateWindow
+	window = SDL_CreateWindow("SDL2 Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_OPENGL);
+	//Checks to see if the window has been created, the pointer will have a value of some kind
+	if (window == nullptr)
+	{
+		//Show error
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_CreateWindow failed", SDL_GetError(), NULL);
+		//Close the SDL Library
+		//https://wiki.libsdl.org/SDL_Quit
+		SDL_Quit();
+	}
+
+
 	// Set context
-	glContext = SDL_GL_CreateContext(Wintmp);
+	glContext = SDL_GL_CreateContext(window);
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <SDL.h>
 
-
 #include "WindowHandler.h"
 
 
