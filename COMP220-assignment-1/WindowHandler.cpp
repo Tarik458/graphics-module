@@ -1,4 +1,12 @@
 #include "WindowHandler.h"
+#include "ModelLoader.h"
+
+struct Vertex
+{
+	float x, y, z;
+};
+
+ModelLoader modelLoader;
 
 SDL_GLContext glContext;
 
@@ -49,19 +57,32 @@ void WindowHandler::setup()
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Unable to initialise GLEW", (char*)glewGetErrorString(glewError), NULL);
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 }
 
 void WindowHandler::vertices()
 {
+	std::vector<ModelLoader::Vertex> vertices;
+	std::vector<unsigned> indices;
+
+	if (!modelLoader.LoadModel("Cube.nff", vertices, indices))
+	{
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelLoader.importer.GetErrorString(), NULL);
+	}
+
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
 
+	/*
 	static const GLfloat vertices[] = {
 	   -1.0f, -1.0f, 0.0f,
 	   1.0f, -1.0f, 0.0f,
 	   0.0f,  1.0f, 0.0f,
 	};
+	*/
 
 	// This will identify our vertex buffer
 	// Generate 1 buffer, put the resulting identifier in vertexbuffer
@@ -69,7 +90,24 @@ void WindowHandler::vertices()
 	// The following commands will talk about our 'vertexbuffer' buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	// Give our vertices to OpenGL.
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+	
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(
+		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		sizeof(Vertex),     // stride
+		(void*)0            // array buffer offset
+	);
+
+	GLuint elementBuffer;
+	glGenBuffers(1, &elementBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * indices.size(), &indices[0], GL_STATIC_DRAW);
+
 
 }
 
@@ -84,19 +122,9 @@ void WindowHandler::Loop()
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glVertexAttribPointer(
-		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-		3,                  // size
-		GL_FLOAT,           // type
-		GL_FALSE,           // normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-	);
+	
 	// Draw the triangle !
 	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-	glDisableVertexAttribArray(0);
 
 	SDL_GL_SwapWindow(window);
 }
