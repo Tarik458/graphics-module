@@ -17,6 +17,7 @@ public:
 	SDL_Event ev;
 	GLuint vertexArray;
 	GLuint vertexBuffer;
+	GLuint elementBuffer;
 
 	// Public functions.
 	void setup();

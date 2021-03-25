@@ -7,11 +7,12 @@
 #include <vector>
 
 #pragma once
-class ModelLoader
+class ModelHandler
 {
 public:
 	struct Vertex;
 	Assimp::Importer importer;
+
 	bool LoadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices);
 
 };

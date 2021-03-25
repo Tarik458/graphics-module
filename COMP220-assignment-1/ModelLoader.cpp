@@ -7,7 +7,7 @@ struct Vertex
 
 Assimp::Importer importer;
 // Import models using Assimp.
-bool ModelLoader::LoadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices)
+bool ModelHandler::LoadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices)
 {
 	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate);
 

@@ -6,7 +6,7 @@ struct Vertex
 	float x, y, z;
 };
 
-ModelLoader modelLoader;
+ModelHandler modelHandler;
 
 SDL_GLContext glContext;
 
@@ -15,6 +15,7 @@ SDL_Event ev;		//SDL Event structure, this will be checked in the while loop
 
 GLuint vertexArray;
 GLuint vertexBuffer;
+GLuint elementBuffer;
 
 
 // Create window using SDL and OpenGL.
@@ -39,6 +40,7 @@ void WindowHandler::setup()
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_CreateWindow failed", SDL_GetError(), NULL);
 		//Close the SDL Library
 		//https://wiki.libsdl.org/SDL_Quit
+		SDL_DestroyWindow(window);
 		SDL_Quit();
 	}
 
@@ -65,12 +67,12 @@ void WindowHandler::setup()
 
 void WindowHandler::vertices()
 {
-	std::vector<ModelLoader::Vertex> vertices;
+	std::vector<ModelHandler::Vertex> vertices;
 	std::vector<unsigned> indices;
 
-	if (!modelLoader.LoadModel("Cube.nff", vertices, indices))
+	if (!modelHandler.LoadModel("Cube.nff", vertices, indices))
 	{
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelLoader.importer.GetErrorString(), NULL);
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelHandler.importer.GetErrorString(), NULL);
 	}
 
 	glGenVertexArrays(1, &vertexArray);
@@ -103,7 +105,6 @@ void WindowHandler::vertices()
 		(void*)0            // array buffer offset
 	);
 
-	GLuint elementBuffer;
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * indices.size(), &indices[0], GL_STATIC_DRAW);
@@ -133,6 +134,7 @@ void WindowHandler::Loop()
 void WindowHandler::cleanup()
 {
 	// Remove things to avoid any memory leaks
+	glDeleteBuffers(1, &elementBuffer);
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteVertexArrays(1, &vertexArray);
 
