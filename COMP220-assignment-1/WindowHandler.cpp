@@ -1,12 +1,5 @@
 #include "WindowHandler.h"
-#include "ModelLoader.h"
 
-struct Vertex
-{
-	float x, y, z;
-};
-
-ModelHandler modelHandler;
 
 SDL_GLContext glContext;
 
@@ -16,6 +9,8 @@ SDL_Event ev;		//SDL Event structure, this will be checked in the while loop
 GLuint vertexArray;
 GLuint vertexBuffer;
 GLuint elementBuffer;
+
+ModelHandler modelLoader;
 
 
 // Create window using SDL and OpenGL.
@@ -67,13 +62,17 @@ void WindowHandler::setup()
 
 void WindowHandler::vertices()
 {
-	std::vector<ModelHandler::Vertex> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<unsigned> indices;
 
-	if (!modelHandler.LoadModel("Cube.nff", vertices, indices))
+
+	if (modelLoader.LoadModel("Cube.nff", vertices, indices) == false)
 	{
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelHandler.importer.GetErrorString(), NULL);
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelLoader.importer.GetErrorString(), NULL);
 	}
+
+	vertices.push_back(vertices[0]);
+	indices.push_back(indices[0]);
 
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
@@ -92,7 +91,7 @@ void WindowHandler::vertices()
 	// The following commands will talk about our 'vertexbuffer' buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	// Give our vertices to OpenGL.
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);  //<- issues
 	
 
 	glEnableVertexAttribArray(0);
@@ -101,7 +100,7 @@ void WindowHandler::vertices()
 		3,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
-		sizeof(Vertex),     // stride
+		sizeof(vertices),     // stride
 		(void*)0            // array buffer offset
 	);
 
