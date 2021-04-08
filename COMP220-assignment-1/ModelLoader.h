@@ -13,7 +13,7 @@ class ModelHandler
 public:
 	Assimp::Importer importer;
 
-	bool LoadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices);
+	bool LoadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices, std::string texturePath);
 
 };
 

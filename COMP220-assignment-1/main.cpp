@@ -10,7 +10,7 @@ int main(int argc, char ** argsv)
 	WindowHandler Window;
 	Window.setup();
 	//Create a Vertex Array object to deal with vertex formats
-	Window.vertices();
+	Window.model_ShaderLoad();
 
 
 	//Event loop, we will loop until running is set to false, usually if escape has been pressed or window is closed

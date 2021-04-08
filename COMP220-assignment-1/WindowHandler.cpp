@@ -4,13 +4,18 @@
 SDL_GLContext glContext;
 
 SDL_Window* window;
+SDL_Surface* image;
 SDL_Event ev;		//SDL Event structure, this will be checked in the while loop
+
 
 GLuint vertexArray;
 GLuint vertexBuffer;
 GLuint elementBuffer;
 
+GLuint programID;
+
 ModelHandler modelLoader;
+ShaderCompiler shaderCompiler;
 
 
 // Create window using SDL and OpenGL.
@@ -23,6 +28,7 @@ void WindowHandler::setup()
 		//Display an error message box
 		//https://wiki.libsdl.org/SDL_ShowSimpleMessageBox
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_Init failed", SDL_GetError(), NULL);
+		cleanup();
 	}
 		
 	//Create a window, note we have to free the pointer returned using the DestroyWindow Function
@@ -33,10 +39,7 @@ void WindowHandler::setup()
 	{
 		//Show error
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_CreateWindow failed", SDL_GetError(), NULL);
-		//Close the SDL Library
-		//https://wiki.libsdl.org/SDL_Quit
-		SDL_DestroyWindow(window);
-		SDL_Quit();
+		cleanup();
 	}
 
 
@@ -53,6 +56,7 @@ void WindowHandler::setup()
 	if (glewError != GLEW_OK)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Unable to initialise GLEW", (char*)glewGetErrorString(glewError), NULL);
+		cleanup();
 	}
 
 	glEnable(GL_BLEND);
@@ -60,19 +64,22 @@ void WindowHandler::setup()
 	
 }
 
-void WindowHandler::vertices()
+std::vector<unsigned> indices;
+void WindowHandler::model_ShaderLoad()
 {
 	std::vector<Vertex> vertices;
-	std::vector<unsigned> indices;
+	std::string texturePath;
 
 
-	if (modelLoader.LoadModel("Cube.nff", vertices, indices) == false)
+	if (modelLoader.LoadModel("Cube.nff", vertices, indices, texturePath) == false)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelLoader.importer.GetErrorString(), NULL);
+		cleanup();
 	}
 
 	vertices.push_back(vertices[0]);
 	indices.push_back(indices[0]);
+
 
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
@@ -84,6 +91,7 @@ void WindowHandler::vertices()
 	   0.0f,  1.0f, 0.0f,
 	};
 	*/
+	
 
 	// This will identify our vertex buffer
 	// Generate 1 buffer, put the resulting identifier in vertexbuffer
@@ -91,7 +99,7 @@ void WindowHandler::vertices()
 	// The following commands will talk about our 'vertexbuffer' buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	// Give our vertices to OpenGL.
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);  //<- issues
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 	
 
 	glEnableVertexAttribArray(0);
@@ -100,15 +108,59 @@ void WindowHandler::vertices()
 		3,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
-		sizeof(vertices),     // stride
+		sizeof(Vertex),     // stride
 		(void*)0            // array buffer offset
+	);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(
+		2,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		2,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		sizeof(Vertex),     // stride
+		(void*)(3 * sizeof(GL_FLOAT))            // array buffer offset
 	);
 
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * indices.size(), &indices[0], GL_STATIC_DRAW);
+	
+	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
 
+	image = IMG_Load("Crate.jpg");
+	if (!image)
+	{
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "IMG_Load failed", IMG_GetError(), NULL);
+		cleanup();
+	}
 
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	int Mode = GL_RGB;
+	if (image->format->BytesPerPixel == 4)
+	{
+		Mode = GL_RGBA;
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, Mode, image->w, image->h, 0, Mode, GL_UNSIGNED_BYTE, image->pixels);
+
+	// Nice trilinear filtering.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void WindowHandler::fullscreen()
@@ -120,11 +172,12 @@ void WindowHandler::fullscreen()
 void WindowHandler::Loop()
 {
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glUseProgram(programID);
 	
-	// Draw the triangle !
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	// Draw
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0);
 
 	SDL_GL_SwapWindow(window);
 }
@@ -137,6 +190,7 @@ void WindowHandler::cleanup()
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteVertexArrays(1, &vertexArray);
 
+	SDL_FreeSurface(image);
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 
