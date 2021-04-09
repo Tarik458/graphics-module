@@ -5,6 +5,7 @@
 #include "Vertex.h"
 #include "ModelLoader.h"
 #include "ShaderCompiler.h"
+#include "CameraController.h"
 
 
 #pragma once
@@ -16,6 +17,8 @@ public:
 	SDL_Window* window;
 	SDL_Surface* image;
 	SDL_Event ev;
+
+	CameraController cameraController;
 
 	// Public functions.
 	void setup();

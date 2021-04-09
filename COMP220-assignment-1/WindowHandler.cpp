@@ -13,9 +13,12 @@ GLuint vertexBuffer;
 GLuint elementBuffer;
 
 GLuint programID;
+unsigned int transformLoc;
+std::vector<unsigned> indices;
 
 ModelHandler modelLoader;
 ShaderCompiler shaderCompiler;
+CameraController cameraController;
 
 
 // Create window using SDL and OpenGL.
@@ -42,6 +45,8 @@ void WindowHandler::setup()
 		cleanup();
 	}
 
+	// enable mouse cap
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	// Set context
 	glContext = SDL_GL_CreateContext(window);
@@ -61,17 +66,18 @@ void WindowHandler::setup()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
+	glEnable(GL_DEPTH_TEST);
 }
 
-std::vector<unsigned> indices;
+// Load models and shaders.
+
 void WindowHandler::model_ShaderLoad()
 {
 	std::vector<Vertex> vertices;
 	std::string texturePath;
 
 
-	if (modelLoader.LoadModel("Cube.nff", vertices, indices, texturePath) == false)
+	if (modelLoader.loadModel("crate.fbx", vertices, indices, texturePath) == false)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelLoader.importer.GetErrorString(), NULL);
 		cleanup();
@@ -127,7 +133,9 @@ void WindowHandler::model_ShaderLoad()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * indices.size(), &indices[0], GL_STATIC_DRAW);
 	
 	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
+	transformLoc = glGetUniformLocation(programID, "transform");
 
+	// Load texture image.
 	image = IMG_Load("Crate.jpg");
 	if (!image)
 	{
@@ -155,34 +163,30 @@ void WindowHandler::model_ShaderLoad()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable(GL_DEPTH_TEST);
 }
 
+// Fullscreen toggle
 void WindowHandler::fullscreen()
 {
 	SDL_SetWindowFullscreen(window, SDL_FALSE);
 }
 
-// Lets main be cleaner, also needs to be in this class to use the gl functions.
+// Lets main be cleaner, also needs to be in this class to use the GL functions.
 void WindowHandler::Loop()
 {
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(programID);
+	cameraController.camUpdate(programID, transformLoc);
 	
 	// Draw
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0);
+	//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0);
 
 	SDL_GL_SwapWindow(window);
 }
 
-// Cleans up all SDL stuff when exiting.
+// Cleans up all SDL and GL stuff when exiting.
 void WindowHandler::cleanup()
 {
 	// Remove things to avoid any memory leaks

@@ -12,6 +12,7 @@ int main(int argc, char ** argsv)
 	//Create a Vertex Array object to deal with vertex formats
 	Window.model_ShaderLoad();
 
+	const Uint8* keystate;
 
 	//Event loop, we will loop until running is set to false, usually if escape has been pressed or window is closed
 	bool running = true;
@@ -40,7 +41,32 @@ int main(int argc, char ** argsv)
 				case SDLK_f:
 					Window.fullscreen();
 					break;
+				default:
+					break;
 				}
+			case SDL_MOUSEMOTION:
+				Window.cameraController.setRotation(Window.ev.motion.xrel, Window.ev.motion.yrel);
+				break;
+			default:
+				break;
+			}
+
+			keystate = SDL_GetKeyboardState(NULL);
+			if (keystate[SDLK_w])
+			{
+				Window.cameraController.walk('w');
+			}
+			if (keystate[SDLK_s])
+			{
+				Window.cameraController.walk('s');
+			}
+			if (keystate[SDLK_a])
+			{
+				Window.cameraController.walk('a');
+			}
+			if (keystate[SDLK_d])
+			{
+				Window.cameraController.walk('d');
 			}
 		}
 
