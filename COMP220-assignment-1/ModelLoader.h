@@ -4,6 +4,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <gl\glew.h>
+#include <SDL_opengl.h>
+
 #include <vector>
 #include "Vertex.h"
 

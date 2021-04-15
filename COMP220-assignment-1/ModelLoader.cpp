@@ -55,5 +55,6 @@ bool ModelHandler::loadModel(const char* filePath, std::vector<Vertex>& vertices
 		}
 	}
 
+
 	return !(vertices.empty() || indices.empty());
 }

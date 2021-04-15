@@ -3,13 +3,15 @@
 glm::mat4 translateModel;
 glm::mat4 mvp, view, projection;
 
-glm::vec3 position(0, 0, 0), forward, sideways(1, 0, 0), rotation(0);
+glm::vec3 position(0, 0, 0), forward(0, 0, -1), sideways(-1, 0, 0), rotation(0);
 const glm::vec4 cameraDirection(0, 0, -1, 0);
 const float walkSpeed = 0.5f, rotationSpeed = 0.1f;
 
 void CameraController::camSetup()
 {
 	translateModel = glm::mat4(1.0f);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 }
 
 void CameraController::walk(char direction)
@@ -18,16 +20,16 @@ void CameraController::walk(char direction)
 	switch (direction)
 	{
 	case 'w':
-		position += walkSpeed * forward;
-		break;
-	case 's':
 		position -= walkSpeed * forward;
 		break;
+	case 's':
+		position += walkSpeed * forward;
+		break;
 	case 'a':
-		position += walkSpeed * sideways;
+		position -= walkSpeed * sideways;
 		break;
 	case 'd':
-		position -= walkSpeed * sideways;
+		position += walkSpeed * sideways;
 		break;
 	}
 	
@@ -58,4 +60,5 @@ void CameraController::camUpdate(GLuint programID, unsigned int transformLoc)
 	mvp = projection * view * translateModel;
 
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+
 }

@@ -51,25 +51,25 @@ int main(int argc, char ** argsv)
 				break;
 			}
 
-			keystate = SDL_GetKeyboardState(NULL);
-			if (keystate[SDLK_w])
-			{
-				Window.cameraController.walk('w');
-			}
-			if (keystate[SDLK_s])
-			{
-				Window.cameraController.walk('s');
-			}
-			if (keystate[SDLK_a])
-			{
-				Window.cameraController.walk('a');
-			}
-			if (keystate[SDLK_d])
-			{
-				Window.cameraController.walk('d');
-			}
 		}
 
+		keystate = SDL_GetKeyboardState(NULL);
+		if (keystate[SDL_SCANCODE_W])
+		{
+			Window.cameraController.walk('w');
+		}
+		if (keystate[SDL_SCANCODE_S])
+		{
+			Window.cameraController.walk('s');
+		}
+		if (keystate[SDL_SCANCODE_A])
+		{
+			Window.cameraController.walk('a');
+		}
+		if (keystate[SDL_SCANCODE_D])
+		{
+			Window.cameraController.walk('d');
+		}
 		
 		Window.Loop();
 	}

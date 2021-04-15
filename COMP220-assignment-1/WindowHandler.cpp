@@ -15,6 +15,8 @@ GLuint elementBuffer;
 GLuint programID;
 unsigned int transformLoc;
 std::vector<unsigned> indices;
+std::vector<Vertex> vertices;
+std::string texturePath;
 
 ModelHandler modelLoader;
 ShaderCompiler shaderCompiler;
@@ -67,24 +69,25 @@ void WindowHandler::setup()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
+
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_COLOR_MATERIAL);
+
+	cameraController.camSetup();
 }
 
 // Load models and shaders.
 
 void WindowHandler::model_ShaderLoad()
 {
-	std::vector<Vertex> vertices;
-	std::string texturePath;
-
 
 	if (modelLoader.loadModel("crate.fbx", vertices, indices, texturePath) == false)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelLoader.importer.GetErrorString(), NULL);
 		cleanup();
 	}
-
-	vertices.push_back(vertices[0]);
-	indices.push_back(indices[0]);
 
 
 	glGenVertexArrays(1, &vertexArray);
@@ -115,22 +118,32 @@ void WindowHandler::model_ShaderLoad()
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		sizeof(Vertex),     // stride
-		(void*)0            // array buffer offset
+		(void*)(sizeof(GL_FLOAT))            // array buffer offset
 	);
 
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(
+		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		4,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		sizeof(Vertex),     // stride
+		(void*)(sizeof(GL_FLOAT))            // array buffer offset
+	);
+	
+	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(
 		2,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		2,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		sizeof(Vertex),     // stride
-		(void*)(3 * sizeof(GL_FLOAT))            // array buffer offset
+		(void*)(sizeof(GL_FLOAT))            // array buffer offset
 	);
 
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * indices.size(), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
 	
 	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
 	transformLoc = glGetUniformLocation(programID, "transform");
@@ -175,13 +188,16 @@ void WindowHandler::fullscreen()
 // Lets main be cleaner, also needs to be in this class to use the GL functions.
 void WindowHandler::Loop()
 {
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	cameraController.camUpdate(programID, transformLoc);
 	
+	cameraController.camUpdate(programID, transformLoc);
+
+	glUseProgram(programID);
+
 	// Draw
-	//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0);
+
 
 	SDL_GL_SwapWindow(window);
 }
@@ -189,6 +205,9 @@ void WindowHandler::Loop()
 // Cleans up all SDL and GL stuff when exiting.
 void WindowHandler::cleanup()
 {
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 	// Remove things to avoid any memory leaks
 	glDeleteBuffers(1, &elementBuffer);
 	glDeleteBuffers(1, &vertexBuffer);
