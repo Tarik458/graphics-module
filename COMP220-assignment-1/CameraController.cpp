@@ -10,8 +10,9 @@ const float walkSpeed = 0.5f, rotationSpeed = 0.1f;
 void CameraController::camSetup()
 {
 	translateModel = glm::mat4(1.0f);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+	translateModel = glm::scale(translateModel, glm::vec3(0.02f, 0.02f, 0.02f));
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
 }
 
 void CameraController::walk(char direction)
@@ -20,29 +21,29 @@ void CameraController::walk(char direction)
 	switch (direction)
 	{
 	case 'w':
-		position -= walkSpeed * forward;
-		break;
-	case 's':
 		position += walkSpeed * forward;
 		break;
+	case 's':
+		position -= walkSpeed * forward;
+		break;
 	case 'a':
-		position -= walkSpeed * sideways;
+		position += walkSpeed * sideways;
 		break;
 	case 'd':
-		position += walkSpeed * sideways;
+		position -= walkSpeed * sideways;
 		break;
 	}
 	
 }
 
-void CameraController::setRotation(float camRotX, float camRotY)
+void CameraController::setRotation(float camRotY, float camRotX)
 {
-	rotation.x -= camRotY * rotationSpeed;
 	rotation.y -= camRotX * rotationSpeed;
+	rotation.x -= camRotY * rotationSpeed;
 
 	glm::mat4 viewRotate(1.0f);
-	viewRotate = glm::rotate(viewRotate, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	viewRotate = glm::rotate(viewRotate, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	viewRotate = glm::rotate(viewRotate, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	forward = glm::normalize(glm::vec3(viewRotate * cameraDirection));
 
 }
@@ -56,7 +57,7 @@ void CameraController::camUpdate(GLuint programID, unsigned int transformLoc)
 		position + forward,
 		glm::vec3(0, 1, 0)
 	);
-	projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 	mvp = projection * view * translateModel;
 
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));

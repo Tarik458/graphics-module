@@ -45,7 +45,7 @@ int main(int argc, char ** argsv)
 					break;
 				}
 			case SDL_MOUSEMOTION:
-				Window.cameraController.setRotation(Window.ev.motion.xrel, Window.ev.motion.yrel);
+				Window.cameraController.setRotation(Window.ev.motion.yrel, Window.ev.motion.xrel);
 				break;
 			default:
 				break;

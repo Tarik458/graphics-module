@@ -118,17 +118,17 @@ void WindowHandler::model_ShaderLoad()
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		sizeof(Vertex),     // stride
-		(void*)(sizeof(GL_FLOAT))            // array buffer offset
+		(void*)0            // array buffer offset
 	);
 
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(
 		1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-		4,                  // size
+		3,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
-		sizeof(Vertex),     // stride
-		(void*)(sizeof(GL_FLOAT))            // array buffer offset
+		8 * sizeof(GL_FLOAT),     // stride
+		(void*)(3 * sizeof(GL_FLOAT))            // array buffer offset
 	);
 	
 	glEnableVertexAttribArray(2);
@@ -138,15 +138,14 @@ void WindowHandler::model_ShaderLoad()
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		sizeof(Vertex),     // stride
-		(void*)(sizeof(GL_FLOAT))            // array buffer offset
+		(void*)(6 * sizeof(GL_FLOAT))            // array buffer offset
 	);
 
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
 	
-	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
-	transformLoc = glGetUniformLocation(programID, "transform");
+
 
 	// Load texture image.
 	image = IMG_Load("Crate.jpg");
@@ -156,26 +155,32 @@ void WindowHandler::model_ShaderLoad()
 		cleanup();
 	}
 
-	GLuint textureID;
-	glGenTextures(1, &textureID);
+	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
+	transformLoc = glGetUniformLocation(programID, "transform");
 
-	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	int Mode = GL_RGB;
-	if (image->format->BytesPerPixel == 4)
+	if (image)
 	{
-		Mode = GL_RGBA;
+		GLuint textureID;
+		glGenTextures(1, &textureID);
+
+		// "Bind" the newly created texture : all future texture functions will modify this texture
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		int Mode = GL_RGB;
+		if (image->format->BytesPerPixel == 4)
+		{
+			Mode = GL_RGBA;
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, Mode, image->w, image->h, 0, Mode, GL_UNSIGNED_BYTE, image->pixels);
+
+		// Nice trilinear filtering.
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-
-	glTexImage2D(GL_TEXTURE_2D, 0, Mode, image->w, image->h, 0, Mode, GL_UNSIGNED_BYTE, image->pixels);
-
-	// Nice trilinear filtering.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glGenerateMipmap(GL_TEXTURE_2D);
 
 }
 

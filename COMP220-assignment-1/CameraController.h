@@ -11,7 +11,7 @@ public:
 
 	void walk(char direction);
 
-	void setRotation(float camRotX, float camRotY);
+	void setRotation(float camRotY, float camRotX);
 
 	void camUpdate(GLuint programID, unsigned int transformLoc);
 

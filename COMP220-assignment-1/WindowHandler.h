@@ -18,6 +18,9 @@ public:
 	SDL_Surface* image;
 	SDL_Event ev;
 
+	GLuint programID;
+	unsigned int transformLoc;
+
 	CameraController cameraController;
 
 	// Public functions.
