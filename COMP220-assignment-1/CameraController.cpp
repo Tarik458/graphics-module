@@ -10,7 +10,7 @@ const float walkSpeed = 0.5f, rotationSpeed = 0.1f;
 void CameraController::camSetup()
 {
 	translateModel = glm::mat4(1.0f);
-	translateModel = glm::scale(translateModel, glm::vec3(0.02f, 0.02f, 0.02f));
+	//translateModel = glm::scale(translateModel, glm::vec3(0.02f, 0.02f, 0.02f));
 	//glMatrixMode(GL_PROJECTION);
 	//glLoadIdentity();
 }

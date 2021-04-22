@@ -5,7 +5,7 @@ Assimp::Importer importer;
 // Import models using Assimp.
 bool ModelHandler::loadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices, std::string &texturePath)
 {
-	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate);
+	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords | aiProcess_CalcTangentSpace);
 
 	// error check
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode || !scene->HasMeshes())
