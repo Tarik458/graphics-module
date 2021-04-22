@@ -3,7 +3,7 @@
 
 Assimp::Importer importer;
 // Import models using Assimp.
-bool ModelHandler::loadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices, std::string texturePath)
+bool ModelHandler::loadModel(const char* filePath, std::vector<Vertex>& vertices, std::vector<unsigned>& indices, std::string &texturePath)
 {
 	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate);
 
@@ -45,6 +45,7 @@ bool ModelHandler::loadModel(const char* filePath, std::vector<Vertex>& vertices
 			vertices[i].tu = texCoords[i].x;
 			vertices[i].tv = texCoords[i].y;
 		}
+		
 	}
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{

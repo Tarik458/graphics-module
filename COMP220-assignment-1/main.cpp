@@ -6,13 +6,14 @@
 
 int main(int argc, char ** argsv)
 {
+	bool fullscreen = false;
 	//Create window
 	WindowHandler Window;
 	Window.setup();
 	//Create a Vertex Array object to deal with vertex formats
 	Window.model_ShaderLoad();
 
-	const Uint8* keystate;
+	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
 	//Event loop, we will loop until running is set to false, usually if escape has been pressed or window is closed
 	bool running = true;
@@ -30,6 +31,10 @@ int main(int argc, char ** argsv)
 				running = false;
 				break;
 				//KEYDOWN Message, called when a key has been pressed down
+			
+			case SDL_MOUSEMOTION:
+				Window.cameraController.setRotation(Window.ev.motion.yrel, Window.ev.motion.xrel);
+				break;
 			case SDL_KEYDOWN:
 				//Check the actual key code of the key that has been pressed
 				switch (Window.ev.key.keysym.sym)
@@ -39,38 +44,42 @@ int main(int argc, char ** argsv)
 					running = false;
 					break;
 				case SDLK_f:
-					Window.fullscreen();
-					break;
+					if (!fullscreen)
+					{
+						Window.fullscreen(true);
+						fullscreen = true;
+					}
+					else
+					{
+						Window.fullscreen(false);
+						fullscreen = false;
+					}
 				default:
 					break;
 				}
-			case SDL_MOUSEMOTION:
-				Window.cameraController.setRotation(Window.ev.motion.yrel, Window.ev.motion.xrel);
-				break;
 			default:
 				break;
 			}
-
+			if (keystate[SDL_SCANCODE_W])
+			{
+				Window.cameraController.walk('w');
+			}
+			if (keystate[SDL_SCANCODE_S])
+			{
+				Window.cameraController.walk('s');
+			}
+			if (keystate[SDL_SCANCODE_A])
+			{
+				Window.cameraController.walk('a');
+			}
+			if (keystate[SDL_SCANCODE_D])
+			{
+				Window.cameraController.walk('d');
+			}
 		}
-
-		keystate = SDL_GetKeyboardState(NULL);
-		if (keystate[SDL_SCANCODE_W])
-		{
-			Window.cameraController.walk('w');
-		}
-		if (keystate[SDL_SCANCODE_S])
-		{
-			Window.cameraController.walk('s');
-		}
-		if (keystate[SDL_SCANCODE_A])
-		{
-			Window.cameraController.walk('a');
-		}
-		if (keystate[SDL_SCANCODE_D])
-		{
-			Window.cameraController.walk('d');
-		}
+		/*
 		
+		*/
 		Window.Loop();
 	}
 	

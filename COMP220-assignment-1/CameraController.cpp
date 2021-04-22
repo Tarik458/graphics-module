@@ -45,7 +45,6 @@ void CameraController::setRotation(float camRotY, float camRotX)
 	viewRotate = glm::rotate(viewRotate, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	viewRotate = glm::rotate(viewRotate, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	forward = glm::normalize(glm::vec3(viewRotate * cameraDirection));
-
 }
 
 void CameraController::camUpdate(GLuint programID, unsigned int transformLoc)
@@ -57,7 +56,7 @@ void CameraController::camUpdate(GLuint programID, unsigned int transformLoc)
 		position + forward,
 		glm::vec3(0, 1, 0)
 	);
-	projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+	projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 	mvp = projection * view * translateModel;
 
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));

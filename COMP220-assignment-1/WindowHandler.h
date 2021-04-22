@@ -28,7 +28,7 @@ public:
 
 	void model_ShaderLoad();
 
-	void fullscreen();
+	void fullscreen(bool setFullscreen);
 
 	void Loop();
 

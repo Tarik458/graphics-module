@@ -127,7 +127,7 @@ void WindowHandler::model_ShaderLoad()
 		3,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
-		8 * sizeof(GL_FLOAT),     // stride
+		sizeof(Vertex),     // stride
 		(void*)(3 * sizeof(GL_FLOAT))            // array buffer offset
 	);
 	
@@ -138,7 +138,7 @@ void WindowHandler::model_ShaderLoad()
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		sizeof(Vertex),     // stride
-		(void*)(6 * sizeof(GL_FLOAT))            // array buffer offset
+		(void*)(7 * sizeof(GL_FLOAT))            // array buffer offset
 	);
 
 	glGenBuffers(1, &elementBuffer);
@@ -148,7 +148,7 @@ void WindowHandler::model_ShaderLoad()
 
 
 	// Load texture image.
-	image = IMG_Load("Crate.jpg");
+	image = IMG_Load(texturePath.c_str());
 	if (!image)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "IMG_Load failed", IMG_GetError(), NULL);
@@ -157,7 +157,7 @@ void WindowHandler::model_ShaderLoad()
 
 	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
 	transformLoc = glGetUniformLocation(programID, "transform");
-
+	
 	if (image)
 	{
 		GLuint textureID;
@@ -185,9 +185,22 @@ void WindowHandler::model_ShaderLoad()
 }
 
 // Fullscreen toggle
-void WindowHandler::fullscreen()
+void WindowHandler::fullscreen(bool setFullscreen)
 {
-	SDL_SetWindowFullscreen(window, SDL_FALSE);
+	if (setFullscreen)
+	{
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		SDL_SetWindowSize(window, 1920, 1080);
+		glViewport(0, 0, 1920, 1080);
+		SDL_UpdateWindowSurface(window);
+	}
+	else
+	{
+		SDL_SetWindowFullscreen(window, 0);
+		SDL_SetWindowSize(window, 1280, 720);
+		glViewport(0, 0, 1280, 720);
+		SDL_UpdateWindowSurface(window);
+	}
 }
 
 // Lets main be cleaner, also needs to be in this class to use the GL functions.
@@ -201,7 +214,7 @@ void WindowHandler::Loop()
 	glUseProgram(programID);
 
 	// Draw
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
 
 	SDL_GL_SwapWindow(window);
