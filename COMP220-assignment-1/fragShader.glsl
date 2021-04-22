@@ -17,7 +17,6 @@ uniform vec3 objColour;
 
 void main()
 {
- // color = vertColour;
 
 color = texture(texSampler, vertUV);
 

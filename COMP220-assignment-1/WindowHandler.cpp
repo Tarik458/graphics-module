@@ -157,7 +157,7 @@ void WindowHandler::model_ShaderLoad()
 
 	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
 	transformLoc = glGetUniformLocation(programID, "transform");
-	
+
 	if (image)
 	{
 		GLuint textureID;
@@ -232,7 +232,6 @@ void WindowHandler::cleanup()
 	glDeleteVertexArrays(1, &vertexArray);
 
 	SDL_FreeSurface(image);
-	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 
 	SDL_Quit();

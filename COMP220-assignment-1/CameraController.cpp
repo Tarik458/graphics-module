@@ -45,6 +45,8 @@ void CameraController::setRotation(float camRotY, float camRotX)
 	viewRotate = glm::rotate(viewRotate, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	viewRotate = glm::rotate(viewRotate, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	forward = glm::normalize(glm::vec3(viewRotate * cameraDirection));
+	viewRotate = glm::rotate(viewRotate, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	sideways = glm::normalize(glm::vec3(viewRotate * cameraDirection));
 }
 
 void CameraController::camUpdate(GLuint programID, unsigned int transformLoc)
