@@ -11,7 +11,7 @@ int main(int argc, char ** argsv)
 	WindowHandler Window;
 	Window.setup();
 	//Create a Vertex Array object to deal with vertex formats
-	Window.model_ShaderLoad();
+	Window.model_ShaderLoad("road.fbx"); // Model taken from: https://free3d.com/3d-model/road-47211.html
 
 	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 

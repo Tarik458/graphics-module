@@ -26,7 +26,7 @@ public:
 	// Public functions.
 	void setup();
 
-	void model_ShaderLoad();
+	void model_ShaderLoad(const char* modelToLoad);
 
 	void fullscreen(bool setFullscreen);
 

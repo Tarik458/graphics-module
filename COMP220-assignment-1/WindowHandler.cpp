@@ -80,10 +80,10 @@ void WindowHandler::setup()
 
 // Load models and shaders.
 
-void WindowHandler::model_ShaderLoad()
+void WindowHandler::model_ShaderLoad(const char* modelToLoad)
 {
 
-	if (modelLoader.loadModel("crate.fbx", vertices, indices, texturePath) == false)
+	if (modelLoader.loadModel(modelToLoad, vertices, indices, texturePath) == false)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Model import failed", modelLoader.importer.GetErrorString(), NULL);
 		cleanup();

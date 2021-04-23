@@ -11,8 +11,7 @@ void CameraController::camSetup()
 {
 	translateModel = glm::mat4(1.0f);
 	//translateModel = glm::scale(translateModel, glm::vec3(0.02f, 0.02f, 0.02f));
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
+	
 }
 
 void CameraController::walk(char direction)
