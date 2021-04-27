@@ -9,9 +9,8 @@ int main(int argc, char ** argsv)
 	bool fullscreen = false;
 	//Create window
 	WindowHandler Window;
-	Window.setup();
 	//Create a Vertex Array object to deal with vertex formats
-	Window.model_ShaderLoad("road.fbx"); // Model taken from: https://free3d.com/3d-model/road-47211.html
+	//Window.modelLoad(); 
 
 	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
@@ -77,9 +76,7 @@ int main(int argc, char ** argsv)
 				Window.cameraController.walk('d');
 			}
 		}
-		/*
 		
-		*/
 		Window.Loop();
 	}
 	

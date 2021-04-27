@@ -1,8 +1,5 @@
 #include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
 
-#include "Vertex.h"
 #include "ModelLoader.h"
 #include "ShaderCompiler.h"
 #include "CameraController.h"
@@ -18,15 +15,17 @@ public:
 	SDL_Surface* image;
 	SDL_Event ev;
 
-	GLuint programID;
-	unsigned int transformLoc;
-
 	CameraController cameraController;
 
 	// Public functions.
+	WindowHandler()
+	{
+		setup();
+	}
+
 	void setup();
 
-	void model_ShaderLoad(const char* modelToLoad);
+	void modelLoad();
 
 	void fullscreen(bool setFullscreen);
 

@@ -7,6 +7,16 @@
 class CameraController
 {
 public:
+	glm::mat4 translateModel;
+	glm::mat4 mvp, view, projection;
+
+	glm::vec3 position, forward, sideways, rotation;
+
+	CameraController()
+	{
+		camSetup();
+	}
+
 	void camSetup();
 
 	void walk(char direction);
