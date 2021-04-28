@@ -19,6 +19,7 @@ public:
     glm::mat4 model;
     glm::mat4 translateVar;
     float radRotation;
+    SDL_Surface* image;
 
     ModelHandler(string const& path, string const& primaryTex, float modelPos, bool gamma = false) : gammaCorrection(gamma)
     {

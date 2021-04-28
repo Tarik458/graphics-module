@@ -4,7 +4,6 @@
 SDL_GLContext glContext;
 
 SDL_Window* window;
-SDL_Surface* image;
 SDL_Event ev;		//SDL Event structure, this will be checked in the while loop
 
 unsigned int transformLoc;
@@ -71,12 +70,20 @@ void WindowHandler::setup()
 
 void WindowHandler::modelLoad()
 {
-	ModelHandler modelLoader("Models/crate/crate.fbx", "Models/crate/crate_color.png", 1);
-	ModelHandler modelLoader2("Models/road/road.fbx", "Models/road/roadTex.png", 1); // Model taken from: https://free3d.com/3d-model/road-47211.html
-	
+
+	ModelHandler Crate("Models/crate/crate.fbx", "crate_color.png", 1);
+	Crate.scale(glm::vec3(0.02, 0.02, 0.02));
+	Crate.translate(glm::vec3(10, 0, 0));
+	ModelHandler Road("Models/road/road.fbx", "roadTex.png", 20); // Model taken from: https://free3d.com/3d-model/road-47211.html
+	ModelHandler Road2("Models/road/road.fbx", "roadTex.png", 20);
+	Road2.translate(glm::vec3(0, 0, -8.5));
+
 	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
-	models.push_back(modelLoader);
-	models.push_back(modelLoader2);
+	transformLoc = glGetUniformLocation(programID, "transform");
+
+	models.push_back(Crate);
+	models.push_back(Road);
+	models.push_back(Road2);
 }
 
 // Fullscreen toggle
@@ -101,9 +108,6 @@ void WindowHandler::fullscreen(bool setFullscreen)
 // Lets main be cleaner, also needs to be in this class to use the GL functions.
 void WindowHandler::Loop()
 {
-	//modelLoad();
-	
-
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -129,6 +133,8 @@ void WindowHandler::Loop()
 void WindowHandler::cleanup()
 {
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 	glDeleteProgram(programID);
 	SDL_DestroyWindow(window);
 

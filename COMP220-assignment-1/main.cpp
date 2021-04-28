@@ -10,7 +10,7 @@ int main(int argc, char ** argsv)
 	//Create window
 	WindowHandler Window;
 	//Create a Vertex Array object to deal with vertex formats
-	//Window.modelLoad(); 
+	Window.modelLoad(); 
 
 	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
@@ -75,6 +75,7 @@ int main(int argc, char ** argsv)
 			{
 				Window.cameraController.walk('d');
 			}
+			
 		}
 		
 		Window.Loop();

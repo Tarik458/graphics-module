@@ -12,7 +12,6 @@ class WindowHandler
 public:
 
 	SDL_Window* window;
-	SDL_Surface* image;
 	SDL_Event ev;
 
 	CameraController cameraController;

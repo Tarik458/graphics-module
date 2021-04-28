@@ -28,7 +28,9 @@ void main()
 
  color = texture(texSampler, vertUV);
 
-// color = vec4(0.5f, 0.5f, 0.0f, 1);
+//color = vec4(vertUV, 0.0f, 1);
+
+//color = vec4(0.5f, 0.5f, 0.0f, 1);
 
 //color = vec4(vertNorm, 1.0f);
 
@@ -38,13 +40,13 @@ void main()
 
 
 
-vec3 norm = normalize(vertNorm);
-vec3 lightNorm = normalize(lightDir);
-
-vec3 baseColour = objColour.x < 0.0f ? texture(texSampler, vertUV).xyz :  objColour;
-
-float diffuseFactor = max(dot(norm, lightNorm), 0.0f);
-vec3 diffuse = diffuseFactor * lightColour;
+//vec3 norm = normalize(vertNorm);
+//vec3 lightNorm = normalize(lightDir);
+//
+//vec3 baseColour = objColour.x < 0.0f ? texture(texSampler, vertUV).xyz :  objColour;
+//
+//float diffuseFactor = max(dot(norm, lightNorm), 0.0f);
+//vec3 diffuse = diffuseFactor * lightColour;
 //color = vec4(diffuse * baseColour, 1.0f);
 
 

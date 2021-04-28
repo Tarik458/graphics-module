@@ -33,7 +33,7 @@ void ModelHandler::loadModel(const string& filePath)
 	
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
-        cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_CreateWindow failed", importer.GetErrorString(), NULL);
         return;
     }
     // retrieve the directory path of the filepath
@@ -181,12 +181,9 @@ unsigned int ModelHandler::TextureFromFile(const char* path, const string& direc
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
-    SDL_Surface* image = IMG_Load(filename.c_str());
+    image = IMG_Load(filename.c_str());
     if (image)
     {
-        GLuint textureID;
-        glGenTextures(1, &textureID);
-
         // "Bind" the newly created texture : all future texture functions will modify this texture
         glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -207,7 +204,7 @@ unsigned int ModelHandler::TextureFromFile(const char* path, const string& direc
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_CreateWindow failed", path, NULL);
     }
 
     return textureID;
