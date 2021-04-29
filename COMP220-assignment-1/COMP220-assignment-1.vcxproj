@@ -160,6 +160,7 @@ xcopy /Y /D /I ..\Libraries\SDL2_image-2.0.3\lib\x64\*.dll "$(OutDir)\*.dll"</Co
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
+    <ClCompile Include="RoadBuilder.cpp" />
     <ClCompile Include="ShaderCompiler.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
@@ -173,6 +174,7 @@ xcopy /Y /D /I ..\Libraries\SDL2_image-2.0.3\lib\x64\*.dll "$(OutDir)\*.dll"</Co
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ModelLoader.h" />
+    <ClInclude Include="RoadBuilder.h" />
     <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="WindowHandler.h" />

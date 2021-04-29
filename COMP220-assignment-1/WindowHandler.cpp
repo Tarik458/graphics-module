@@ -8,9 +8,11 @@ SDL_Event ev;		//SDL Event structure, this will be checked in the while loop
 
 unsigned int transformLoc;
 
-vector<ModelHandler> models;
+vector<ModelHandler> roadModels;
 ShaderCompiler shaderCompiler;
 CameraController cameraController;
+RoadBuilder roadBuilder;
+
 GLuint programID;
 
 // Create window using SDL and OpenGL.
@@ -70,20 +72,12 @@ void WindowHandler::setup()
 
 void WindowHandler::modelLoad()
 {
-
-	ModelHandler Crate("Models/crate/crate.fbx", "crate_color.png", 1);
-	Crate.scale(glm::vec3(0.02, 0.02, 0.02));
-	Crate.translate(glm::vec3(10, 0, 0));
-	ModelHandler Road("Models/road/road.fbx", "roadTex.png", 20); // Model taken from: https://free3d.com/3d-model/road-47211.html
-	ModelHandler Road2("Models/road/road.fbx", "roadTex.png", 20);
-	Road2.translate(glm::vec3(0, 0, -8.5));
+	roadBuilder.loadRoads(roadModels);
+	
 
 	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
 	transformLoc = glGetUniformLocation(programID, "transform");
 
-	models.push_back(Crate);
-	models.push_back(Road);
-	models.push_back(Road2);
 }
 
 // Fullscreen toggle
@@ -118,12 +112,18 @@ void WindowHandler::Loop()
 		cameraController.position + cameraController.forward,
 		glm::vec3(0, 1, 0)
 	);
-	for (std::size_t i = 0; i < models.size(); i++)
+
+	// reposition and draw models.
+	for (std::size_t i = 0; i < roadModels.size(); i++)
 	{
+		if (roadBuilder.repositionRoad(cameraController.position, roadModels[i].modelPosition))
+		{
+			roadModels[i].translate(glm::vec3(0, 0, -200));
+		}
 		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
-		cameraController.mvp = cameraController.projection * cameraController.view * models[i].model;
+		cameraController.mvp = cameraController.projection * cameraController.view * roadModels[i].model;
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
-		models[i].draw(programID);
+		roadModels[i].draw(programID);
 	}
 
 	SDL_GL_SwapWindow(window);

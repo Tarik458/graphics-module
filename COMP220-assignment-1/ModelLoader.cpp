@@ -20,8 +20,10 @@ void ModelHandler::scale(glm::vec3 scale)
 
 void ModelHandler::translate(glm::vec3 translation)
 {
+    translateVar = glm::mat4(1.0f);
     translateVar = glm::translate(translateVar, translation);
     model = translateVar * model;
+    modelPosition += translation;
 }
 
 // Import models using Assimp.

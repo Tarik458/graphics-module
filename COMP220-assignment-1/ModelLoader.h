@@ -18,6 +18,7 @@ public:
     float modelPos;
     glm::mat4 model;
     glm::mat4 translateVar;
+    glm::vec3 modelPosition;
     float radRotation;
     SDL_Surface* image;
 
