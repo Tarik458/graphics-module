@@ -9,6 +9,8 @@ SDL_Event ev;		//SDL Event structure, this will be checked in the while loop
 unsigned int transformLoc;
 
 vector<ModelHandler> roadModels;
+vector<ModelHandler> obstacleModels;
+
 ShaderCompiler shaderCompiler;
 CameraController cameraController;
 RoadBuilder roadBuilder;
@@ -73,7 +75,7 @@ void WindowHandler::setup()
 void WindowHandler::modelLoad()
 {
 	roadBuilder.loadRoads(roadModels);
-	
+	roadBuilder.loadObstacles(obstacleModels);
 
 	programID = shaderCompiler.LoadShaders("vertShader.glsl", "fragShader.glsl");
 	transformLoc = glGetUniformLocation(programID, "transform");
@@ -124,6 +126,13 @@ void WindowHandler::Loop()
 		cameraController.mvp = cameraController.projection * cameraController.view * roadModels[i].model;
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
 		roadModels[i].draw(programID);
+	}
+	for (std::size_t i = 0; i < obstacleModels.size(); i++)
+	{
+		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+		cameraController.mvp = cameraController.projection * cameraController.view * obstacleModels[i].model;
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
+		obstacleModels[i].draw(programID);
 	}
 
 	SDL_GL_SwapWindow(window);

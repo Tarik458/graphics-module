@@ -46,6 +46,21 @@ void RoadBuilder::loadRoads(vector<ModelHandler> &roadModels)
 	roadModels.push_back(Road10);
 }
 
+void RoadBuilder::loadObstacles(vector<ModelHandler>& obstacleModels)
+{
+	ModelHandler CraggyRock("Models/rocks/craggyRock.fbx", "craggyRock.png", 1);
+	CraggyRock.scale(glm::vec3(0.02, 0.02, 0.02));
+	CraggyRock.translate(glm::vec3(20, 0, 0));
+	ModelHandler MossyRock("Models/rocks/mossyRock.fbx", "mossyRock.png", 1);
+	MossyRock.translate(glm::vec3(-20, 0, 0));
+	ModelHandler Logs("Models/logs/logPile.fbx", "logTex.png", 1);
+	Logs.rotation(90.0f, glm::vec3(0, 1, 0));
+
+	obstacleModels.push_back(CraggyRock);
+	obstacleModels.push_back(MossyRock);
+	obstacleModels.push_back(Logs);
+}
+
 // if road section behind camera then move to front of road.
 bool RoadBuilder::repositionRoad(glm::vec3 camPos, glm::vec3 modelPos)
 {
