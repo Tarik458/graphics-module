@@ -10,5 +10,9 @@ public:
 	void loadObstacles(vector<ModelHandler>& obstacleModels);
 
 	bool repositionRoad(glm::vec3 camPos, glm::vec3 modelPos);
+	void repositionObstacle(glm::vec3 camPos, vector<ModelHandler>& obstacleModels);
+
+private:
+	int selectObstacle(int size);
 };
 

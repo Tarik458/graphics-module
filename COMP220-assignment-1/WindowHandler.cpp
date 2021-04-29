@@ -17,6 +17,8 @@ RoadBuilder roadBuilder;
 
 GLuint programID;
 
+GLint64 timer, passed;
+
 // Create window using SDL and OpenGL.
 void WindowHandler::setup()
 {
@@ -74,6 +76,7 @@ void WindowHandler::setup()
 
 void WindowHandler::modelLoad()
 {
+	// load road and obstacle models into respective "list" vectors.
 	roadBuilder.loadRoads(roadModels);
 	roadBuilder.loadObstacles(obstacleModels);
 
@@ -101,7 +104,7 @@ void WindowHandler::fullscreen(bool setFullscreen)
 	}
 }
 
-// Lets main be cleaner, also needs to be in this class to use the GL functions.
+// Lets main be cleaner also has access to all variables in this class.
 void WindowHandler::Loop()
 {
 	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
@@ -115,21 +118,31 @@ void WindowHandler::Loop()
 		glm::vec3(0, 1, 0)
 	);
 
-	// reposition and draw models.
+	// reposition and draw road models.
 	for (std::size_t i = 0; i < roadModels.size(); i++)
 	{
 		if (roadBuilder.repositionRoad(cameraController.position, roadModels[i].modelPosition))
 		{
 			roadModels[i].translate(glm::vec3(0, 0, -200));
 		}
-		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 200.0f);
 		cameraController.mvp = cameraController.projection * cameraController.view * roadModels[i].model;
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
 		roadModels[i].draw(programID);
 	}
+
+	// make sure not to spawn obstacles too quickly.
+	glGetInteger64v(GL_TIMESTAMP, &passed);
+	GLint64 timePassed = (passed / 1000000) - (timer / 1000000);
+	// spawn in and draw obstacle models.
+	if (rand() % 41 == 0 &&  timePassed > 1000) //more than one second.
+	{
+		glGetInteger64v(GL_TIMESTAMP, &timer);
+		roadBuilder.repositionObstacle(cameraController.position, obstacleModels);
+	}
 	for (std::size_t i = 0; i < obstacleModels.size(); i++)
 	{
-		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 200.0f);
 		cameraController.mvp = cameraController.projection * cameraController.view * obstacleModels[i].model;
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
 		obstacleModels[i].draw(programID);

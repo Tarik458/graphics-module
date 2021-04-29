@@ -3,36 +3,39 @@
 // load road models into correct positions.
 void RoadBuilder::loadRoads(vector<ModelHandler> &roadModels)
 {
+	glm::vec3 scale = glm::vec3(3.5, 2.3, 2.3);
+	glm::vec2 xyOffset = glm::vec2(1, -5);
+
 	ModelHandler Road1("Models/road/road.fbx", "roadTex.png", 1); // Model taken from: https://free3d.com/3d-model/road-47211.html
-	Road1.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road1.translate(glm::vec3(0, -5, 0));
+	Road1.scale(scale);
+	Road1.translate(glm::vec3(xyOffset, 0));
 	ModelHandler Road2("Models/road/road.fbx", "roadTex.png", 1);
-	Road2.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road2.translate(glm::vec3(0, -5, -20));
+	Road2.scale(scale);
+	Road2.translate(glm::vec3(xyOffset, -20));
 	ModelHandler Road3("Models/road/road.fbx", "roadTex.png", 1);
-	Road3.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road3.translate(glm::vec3(0, -5, -40));
+	Road3.scale(scale);
+	Road3.translate(glm::vec3(xyOffset, -40));
 	ModelHandler Road4("Models/road/road.fbx", "roadTex.png", 1);
-	Road4.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road4.translate(glm::vec3(0, -5, -60));
+	Road4.scale(scale);
+	Road4.translate(glm::vec3(xyOffset, -60));
 	ModelHandler Road5("Models/road/road.fbx", "roadTex.png", 1);
-	Road5.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road5.translate(glm::vec3(0, -5, -80));
+	Road5.scale(scale);
+	Road5.translate(glm::vec3(xyOffset, -80));
 	ModelHandler Road6("Models/road/road.fbx", "roadTex.png", 1);
-	Road6.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road6.translate(glm::vec3(0, -5, -100));
+	Road6.scale(scale);
+	Road6.translate(glm::vec3(xyOffset, -100));
 	ModelHandler Road7("Models/road/road.fbx", "roadTex.png", 1);
-	Road7.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road7.translate(glm::vec3(0, -5, -120));
+	Road7.scale(scale);
+	Road7.translate(glm::vec3(xyOffset, -120));
 	ModelHandler Road8("Models/road/road.fbx", "roadTex.png", 1);
-	Road8.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road8.translate(glm::vec3(0, -5, -140));
+	Road8.scale(scale);
+	Road8.translate(glm::vec3(xyOffset, -140));
 	ModelHandler Road9("Models/road/road.fbx", "roadTex.png", 1);
-	Road9.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road9.translate(glm::vec3(0, -5, -160));
+	Road9.scale(scale);
+	Road9.translate(glm::vec3(xyOffset, -160));
 	ModelHandler Road10("Models/road/road.fbx", "roadTex.png", 1);
-	Road10.scale(glm::vec3(2.3, 2.3, 2.3));
-	Road10.translate(glm::vec3(0, -5, -180));
+	Road10.scale(scale);
+	Road10.translate(glm::vec3(xyOffset, -180));
 
 	roadModels.push_back(Road1);
 	roadModels.push_back(Road2);
@@ -50,15 +53,31 @@ void RoadBuilder::loadObstacles(vector<ModelHandler>& obstacleModels)
 {
 	ModelHandler CraggyRock("Models/rocks/craggyRock.fbx", "craggyRock.png", 1);
 	CraggyRock.scale(glm::vec3(0.02, 0.02, 0.02));
-	CraggyRock.translate(glm::vec3(20, 0, 0));
+	CraggyRock.translate(glm::vec3(0, -3, 20));
 	ModelHandler MossyRock("Models/rocks/mossyRock.fbx", "mossyRock.png", 1);
-	MossyRock.translate(glm::vec3(-20, 0, 0));
-	ModelHandler Logs("Models/logs/logPile.fbx", "logTex.png", 1);
-	Logs.rotation(90.0f, glm::vec3(0, 1, 0));
+	MossyRock.scale(glm::vec3(0.4, 1, 0.6));
+	MossyRock.translate(glm::vec3(0, -2.25, 20));
+	ModelHandler Log("Models/logs/logPile.fbx", "logTex.png", 1);
+	Log.scale(glm::vec3(0.6, 1, 1));
+	Log.rotation(90.0f, glm::vec3(0, 1, 0));
+	Log.translate(glm::vec3(0, -3.25, 20));
+	ModelHandler CraggyRock2("Models/rocks/craggyRock.fbx", "craggyRock.png", 1);
+	CraggyRock2.scale(glm::vec3(0.02, 0.02, 0.02));
+	CraggyRock2.translate(glm::vec3(0, -3, 20));
+	ModelHandler MossyRock2("Models/rocks/mossyRock.fbx", "mossyRock.png", 1);
+	MossyRock2.scale(glm::vec3(0.4, 1, 0.6));
+	MossyRock2.translate(glm::vec3(0, -2.25, 20));
+	ModelHandler Log2("Models/logs/logPile.fbx", "logTex.png", 1);
+	Log2.scale(glm::vec3(0.6, 1, 1));
+	Log2.rotation(90.0f, glm::vec3(0, 1, 0));
+	Log2.translate(glm::vec3(0, -3.25, 20));
 
 	obstacleModels.push_back(CraggyRock);
 	obstacleModels.push_back(MossyRock);
-	obstacleModels.push_back(Logs);
+	obstacleModels.push_back(Log);
+	obstacleModels.push_back(CraggyRock2);
+	obstacleModels.push_back(MossyRock2);
+	obstacleModels.push_back(Log2);
 }
 
 // if road section behind camera then move to front of road.
@@ -72,4 +91,33 @@ bool RoadBuilder::repositionRoad(glm::vec3 camPos, glm::vec3 modelPos)
 	{
 		return false;
 	}
+}
+
+// move obstacles into road with random left, center, or right.
+void RoadBuilder::repositionObstacle(glm::vec3 camPos, vector<ModelHandler>& obstacleModels)
+{
+	int selectedModel = selectObstacle(obstacleModels.size());
+	int sidewaysTrans = rand() % 9;
+	if (sidewaysTrans < 3)
+	{
+		sidewaysTrans = -5;
+	}
+	else if (sidewaysTrans > 6)
+	{
+		sidewaysTrans = 5;
+	}
+	else sidewaysTrans = 0;
+
+	// make sure obstacle is behind camera before spawning it in.
+	if (obstacleModels[selectedModel].modelPosition.z > camPos.z + 10)
+	{
+		obstacleModels[selectedModel].translate(glm::vec3(-obstacleModels[selectedModel].modelPosition.x, 0, 0));
+		obstacleModels[selectedModel].translate(glm::vec3(sidewaysTrans, 0, -200) + glm::vec3(0, 0, camPos.z));
+	}
+
+}
+
+int RoadBuilder::selectObstacle(int size)
+{
+	return rand() % size;
 }
