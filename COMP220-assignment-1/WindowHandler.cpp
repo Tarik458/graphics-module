@@ -129,7 +129,7 @@ void WindowHandler::Loop()
 		{
 			roadModels[i].translate(glm::vec3(0, 0, -200));
 		}
-		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 200.0f);
+		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 180.0f);
 		cameraController.mvp = cameraController.projection * cameraController.view * roadModels[i].model;
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
 		roadModels[i].draw(programID);
@@ -153,7 +153,7 @@ void WindowHandler::Loop()
 		{
 			bgColourToUse = collisionDetect(obstacleModels[i].modelPosition, cameraController.position);
 		}
-		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 200.0f);
+		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 180.0f);
 		cameraController.mvp = cameraController.projection * cameraController.view * obstacleModels[i].model;
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
 		obstacleModels[i].draw(programID);
