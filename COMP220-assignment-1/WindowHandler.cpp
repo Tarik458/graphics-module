@@ -19,6 +19,10 @@ GLuint programID;
 
 GLint64 timer, passed;
 
+glm::vec3 backgroundColour(0.0f, 0.5f, 0.5f);
+glm::vec3 collisionColour(1.0f, 0.1f, 0.1f);
+glm::vec3 bgColourToUse = backgroundColour;
+
 // Create window using SDL and OpenGL.
 void WindowHandler::setup()
 {
@@ -107,7 +111,7 @@ void WindowHandler::fullscreen(bool setFullscreen)
 // Lets main be cleaner also has access to all variables in this class.
 void WindowHandler::Loop()
 {
-	glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
+	glClearColor(bgColourToUse.x, bgColourToUse.y, bgColourToUse.z, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glUseProgram(programID);
@@ -134,14 +138,21 @@ void WindowHandler::Loop()
 	// make sure not to spawn obstacles too quickly.
 	glGetInteger64v(GL_TIMESTAMP, &passed);
 	GLint64 timePassed = (passed / 1000000) - (timer / 1000000);
-	// spawn in and draw obstacle models.
+	// spawn in obstacle models.
 	if (rand() % 41 == 0 &&  timePassed > 1000) //more than one second.
 	{
 		glGetInteger64v(GL_TIMESTAMP, &timer);
 		roadBuilder.repositionObstacle(cameraController.position, obstacleModels);
 	}
+
+	// check for collisions with and draw obstacles.
+	bgColourToUse = backgroundColour;
 	for (std::size_t i = 0; i < obstacleModels.size(); i++)
 	{
+		if (bgColourToUse != collisionColour)
+		{
+			bgColourToUse = collisionDetect(obstacleModels[i].modelPosition, cameraController.position);
+		}
 		cameraController.projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 200.0f);
 		cameraController.mvp = cameraController.projection * cameraController.view * obstacleModels[i].model;
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(cameraController.mvp));
@@ -149,6 +160,31 @@ void WindowHandler::Loop()
 	}
 
 	SDL_GL_SwapWindow(window);
+	glClearColor(bgColourToUse.x, bgColourToUse.y, bgColourToUse.z, 1.0f);
+}
+
+// background will flash red if there is a collsion.
+glm::vec3 WindowHandler::collisionDetect(glm::vec3 modelPos, glm::vec3 camPos)
+{
+	bool collision = false;
+	float collisionRange = 2.5;
+
+	if (camPos.x > modelPos.x - collisionRange && camPos.x < modelPos.x + collisionRange)
+	{
+		if (camPos.z > modelPos.z - collisionRange && camPos.z < modelPos.z + collisionRange)
+		{
+			collision = true;
+		}
+	}
+
+	if (collision)
+	{
+		return collisionColour;
+	}
+	else
+	{
+		return backgroundColour;
+	}
 }
 
 // Cleans up all SDL and GL stuff when exiting.

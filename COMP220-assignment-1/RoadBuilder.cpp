@@ -115,7 +115,8 @@ void RoadBuilder::repositionObstacle(glm::vec3 camPos, vector<ModelHandler>& obs
 	// make sure obstacle is behind camera before spawning it in.
 	if (obstacleModels[selectedModel].modelPosition.z > camPos.z + 10)
 	{
-		obstacleModels[selectedModel].translate(glm::vec3(-obstacleModels[selectedModel].modelPosition.x, 0, 0));
+		// reset pos and set new pos.
+		obstacleModels[selectedModel].translate(glm::vec3(-obstacleModels[selectedModel].modelPosition.x, 0, -obstacleModels[selectedModel].modelPosition.z));
 		obstacleModels[selectedModel].translate(glm::vec3(sidewaysTrans, 0, -200) + glm::vec3(0, 0, camPos.z));
 	}
 

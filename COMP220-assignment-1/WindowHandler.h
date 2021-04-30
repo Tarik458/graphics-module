@@ -30,6 +30,8 @@ public:
 
 	void Loop();
 
+	glm::vec3 collisionDetect(glm::vec3 modelPos, glm::vec3 camPos);
+
 	void cleanup();
 
 };

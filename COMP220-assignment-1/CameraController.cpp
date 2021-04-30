@@ -24,7 +24,7 @@ void CameraController::switchControl()
 		freeCam = false;
 		forward = glm::vec3(0, 0, -1);
 		sideways = glm::vec3(-1, 0, 0);
-		position = glm::vec3(0, 0, 0);
+		position = glm::vec3(0, 0, position.z);
 		walkSpeed = 1.0f;
 	}
 	else if (!freeCam)
