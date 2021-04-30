@@ -1,8 +1,12 @@
 # comp220-assignment-1
 Controls:
-WASD to move,
-F for fullscreen toggle,
-
+*WASD to move,
+*mouse look
+*F for fullscreen toggle,
+*SPACE to switch control mode
+alternate control mode:
+*AD move side to side
+*SPACE to switch control mode
 ESCAPE to quit.
 
 road from: https://free3d.com/3d-model/road-47211.html

@@ -19,6 +19,8 @@ public:
 
 	void camSetup();
 
+	void switchControl();
+
 	void walk(char direction);
 
 	void setRotation(float camRotY, float camRotX);

@@ -7,6 +7,7 @@
 int main(int argc, char ** argsv)
 {
 	bool fullscreen = false;
+	bool freeCam = true;
 	//Create window
 	WindowHandler Window;
 	//Create a Vertex Array object to deal with vertex formats
@@ -32,7 +33,10 @@ int main(int argc, char ** argsv)
 				//KEYDOWN Message, called when a key has been pressed down
 			
 			case SDL_MOUSEMOTION:
-				Window.cameraController.setRotation(Window.ev.motion.yrel, Window.ev.motion.xrel);
+				if (freeCam)
+				{
+					Window.cameraController.setRotation(Window.ev.motion.yrel, Window.ev.motion.xrel);
+				}
 				break;
 			case SDL_KEYDOWN:
 				//Check the actual key code of the key that has been pressed
@@ -53,31 +57,47 @@ int main(int argc, char ** argsv)
 						Window.fullscreen(false);
 						fullscreen = false;
 					}
+					break;
+				case SDLK_SPACE:
+					if (freeCam)
+					{
+						freeCam = false;
+					}
+					else if (!freeCam)
+					{
+						freeCam = true;
+					}
+					Window.cameraController.switchControl();
+					break;
 				default:
 					break;
 				}
 			default:
 				break;
 			}
-			if (keystate[SDL_SCANCODE_W])
-			{
-				Window.cameraController.walk('w');
-			}
-			if (keystate[SDL_SCANCODE_S])
-			{
-				Window.cameraController.walk('s');
-			}
-			if (keystate[SDL_SCANCODE_A])
-			{
-				Window.cameraController.walk('a');
-			}
-			if (keystate[SDL_SCANCODE_D])
-			{
-				Window.cameraController.walk('d');
-			}
+			
 			
 		}
-		
+		if (keystate[SDL_SCANCODE_W])
+		{
+			Window.cameraController.walk('w');
+		}
+		if (keystate[SDL_SCANCODE_S] && freeCam)
+		{
+			Window.cameraController.walk('s');
+		}
+		if (keystate[SDL_SCANCODE_A])
+		{
+			Window.cameraController.walk('a');
+		}
+		if (keystate[SDL_SCANCODE_D])
+		{
+			Window.cameraController.walk('d');
+		}
+		if (!freeCam)
+		{
+			Window.cameraController.walk('w');
+		}
 		Window.Loop();
 	}
 	

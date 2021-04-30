@@ -4,7 +4,7 @@
 void RoadBuilder::loadRoads(vector<ModelHandler> &roadModels)
 {
 	glm::vec3 scale = glm::vec3(3.5, 2.3, 2.3);
-	glm::vec2 xyOffset = glm::vec2(1, -5);
+	glm::vec2 xyOffset = glm::vec2(0, -5);
 
 	ModelHandler Road1("Models/road/road.fbx", "roadTex.png", 1); // Model taken from: https://free3d.com/3d-model/road-47211.html
 	Road1.scale(scale);
@@ -56,21 +56,25 @@ void RoadBuilder::loadObstacles(vector<ModelHandler>& obstacleModels)
 	CraggyRock.translate(glm::vec3(0, -3, 20));
 	ModelHandler MossyRock("Models/rocks/mossyRock.fbx", "mossyRock.png", 1);
 	MossyRock.scale(glm::vec3(0.4, 1, 0.6));
-	MossyRock.translate(glm::vec3(0, -2.25, 20));
+	MossyRock.translate(glm::vec3(-1, -2.25, 20));
+	MossyRock.modelPosition.x = 0;
 	ModelHandler Log("Models/logs/logPile.fbx", "logTex.png", 1);
 	Log.scale(glm::vec3(0.6, 1, 1));
 	Log.rotation(90.0f, glm::vec3(0, 1, 0));
-	Log.translate(glm::vec3(0, -3.25, 20));
+	Log.translate(glm::vec3(-1, -3.25, 20));
+	Log.modelPosition.x = 0;
 	ModelHandler CraggyRock2("Models/rocks/craggyRock.fbx", "craggyRock.png", 1);
 	CraggyRock2.scale(glm::vec3(0.02, 0.02, 0.02));
 	CraggyRock2.translate(glm::vec3(0, -3, 20));
 	ModelHandler MossyRock2("Models/rocks/mossyRock.fbx", "mossyRock.png", 1);
 	MossyRock2.scale(glm::vec3(0.4, 1, 0.6));
-	MossyRock2.translate(glm::vec3(0, -2.25, 20));
+	MossyRock2.translate(glm::vec3(-1, -2.25, 20));
+	MossyRock2.modelPosition.x = 0;
 	ModelHandler Log2("Models/logs/logPile.fbx", "logTex.png", 1);
 	Log2.scale(glm::vec3(0.6, 1, 1));
 	Log2.rotation(90.0f, glm::vec3(0, 1, 0));
-	Log2.translate(glm::vec3(0, -3.25, 20));
+	Log2.translate(glm::vec3(-1, -3.25, 20));
+	Log2.modelPosition.x = 0;
 
 	obstacleModels.push_back(CraggyRock);
 	obstacleModels.push_back(MossyRock);
