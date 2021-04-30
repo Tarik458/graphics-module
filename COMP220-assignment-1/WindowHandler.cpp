@@ -139,7 +139,7 @@ void WindowHandler::Loop()
 	glGetInteger64v(GL_TIMESTAMP, &passed);
 	GLint64 timePassed = (passed / 1000000) - (timer / 1000000);
 	// spawn in obstacle models.
-	if (rand() % 41 == 0 &&  timePassed > 1000) //more than one second.
+	if (rand() % 41 == 0 &&  timePassed > 500) //more than one second.
 	{
 		glGetInteger64v(GL_TIMESTAMP, &timer);
 		roadBuilder.repositionObstacle(cameraController.position, obstacleModels);
@@ -160,7 +160,7 @@ void WindowHandler::Loop()
 	}
 
 	SDL_GL_SwapWindow(window);
-	glClearColor(bgColourToUse.x, bgColourToUse.y, bgColourToUse.z, 1.0f);
+	//glClearColor(bgColourToUse.x, bgColourToUse.y, bgColourToUse.z, 1.0f);
 }
 
 // background will flash red if there is a collsion.

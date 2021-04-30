@@ -4,6 +4,7 @@ layout(location = 0) in vec3 vertexPosition_modelspace;
 layout(location = 1) in vec3 vertexNormal;
 layout(location = 2) in vec2 vertexUV;
 
+out vec3 vertPosition;
 out vec3 vertNorm;
 out vec2 vertUV;
 
@@ -13,6 +14,7 @@ void main()
 {
   gl_Position = transform * vec4(vertexPosition_modelspace, 1.0f);
 
+  vertPosition = vertexPosition_modelspace;
   vertNorm = vertexNormal;
   vertUV = vertexUV;
 }

@@ -49,6 +49,7 @@ void RoadBuilder::loadRoads(vector<ModelHandler> &roadModels)
 	roadModels.push_back(Road10);
 }
 
+
 void RoadBuilder::loadObstacles(vector<ModelHandler>& obstacleModels)
 {
 	ModelHandler CraggyRock("Models/rocks/craggyRock.fbx", "craggyRock.png", 1);
@@ -59,7 +60,7 @@ void RoadBuilder::loadObstacles(vector<ModelHandler>& obstacleModels)
 	MossyRock.translate(glm::vec3(-1, -2.25, 20));
 	MossyRock.modelPosition.x = 0;
 	ModelHandler Log("Models/logs/logPile.fbx", "logTex.png", 1);
-	Log.scale(glm::vec3(0.6, 1, 1));
+	Log.scale(glm::vec3(0.8, 1, 1));
 	Log.rotation(90.0f, glm::vec3(0, 1, 0));
 	Log.translate(glm::vec3(-1, -3.25, 20));
 	Log.modelPosition.x = 0;
@@ -71,7 +72,7 @@ void RoadBuilder::loadObstacles(vector<ModelHandler>& obstacleModels)
 	MossyRock2.translate(glm::vec3(-1, -2.25, 20));
 	MossyRock2.modelPosition.x = 0;
 	ModelHandler Log2("Models/logs/logPile.fbx", "logTex.png", 1);
-	Log2.scale(glm::vec3(0.6, 1, 1));
+	Log2.scale(glm::vec3(0.8, 1, 1));
 	Log2.rotation(90.0f, glm::vec3(0, 1, 0));
 	Log2.translate(glm::vec3(-1, -3.25, 20));
 	Log2.modelPosition.x = 0;
